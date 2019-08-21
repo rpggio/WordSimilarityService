@@ -23,7 +23,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "WordSimilarity/main.py",
-        "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\nnltk.data.path.append(\"/tmp\")\nnltk.download(\"wordnet\", download_dir = \"/tmp\")\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef handler(event, context):\n    words = ['car', 'jet', 'dog', 'wheel', 'pizza', 'airport', 'city', 'friend']\n    synsets = [{ \"word\": w, \"lemma\": wn.synsets(w, 'n')[0] } for w in words]\n    pairs = pairings(synsets)\n    similarities = [[p[0][\"word\"], p[1][\"word\"], p[0][\"lemma\"].wup_similarity(p[1][\"lemma\"])] for p in pairs]\n\n    return list(similarities)\n",
+        "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\nnltk.data.path.append(\"/tmp\")\nnltk.download(\"wordnet\", download_dir = \"/tmp\")\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef handler(event, context):\n    queryString = event[\"queryStringParameters\"]\n    words = queryString[\"words\"]\n    if(words.len() < 2 or words.len() > 40):\n        return {\n            \"statusCode\": 400,\n            \"status\": \"invalid request\",\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\n    synsets = [{ \"word\": w, \"lemma\": wn.synsets(w, 'n')[0] } for w in words]\n    pairs = pairings(synsets)\n    similarities = [[p[0][\"word\"], p[1][\"word\"], p[0][\"lemma\"].wup_similarity(p[1][\"lemma\"])] for p in pairs]\n\n    return {\n        \"body\": json.dumps(list(similarities))\n    }\n",
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
@@ -64,12 +64,12 @@
           "selectedRegion": "us-west-2",
           "apiMode": 0,
           "apiName": "Word Similarities",
-          "endpointType": "REGIONAL",
+          "endpointType": "EDGE",
           "resourceMode": 0,
           "resourceName": "word-similarities",
           "resourcePath": "/word-similarities",
           "restMethod": "GET",
-          "proxyIntegration": false,
+          "proxyIntegration": true,
           "enableCORS": false,
           "stageMode": 0,
           "stageName": "dev",
@@ -117,7 +117,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566428884900
+    "lastSave": 1566430204932
   },
   "VCS_STATE": {
     "provider": "GitHub",
