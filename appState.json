@@ -1,0 +1,124 @@
+{
+  "EDITOR_STATE": {
+    "allProjectFiles": {
+      "e2f4cab2-ae38-49cf-9c45-df8e19de3dad": {
+        "id": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+        "parent": null,
+        "name": "WordSimilarity",
+        "type": "DIRECTORY",
+        "isDirectory": true,
+        "children": [
+          "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+          "60573f28-a7cd-4ac9-8458-6635abc9fda7"
+        ],
+        "isRemovable": false,
+        "filePath": "WordSimilarity"
+      },
+      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b": {
+        "id": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+        "parent": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+        "name": "main.py",
+        "type": "PYTHON_LAMBDA",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "WordSimilarity/main.py",
+        "code": "def handler(event, context):\n    \n    print(event)\n    print(context)\n    \n    return {\"message\": \"Successfully executed\"}\n",
+        "config": {
+          "runtime": "python3.6",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": []
+        },
+        "triggers": [
+          {
+            "resourceName": "apigusWest2WordSimilaritieswordSimilaritiesget",
+            "config": {}
+          }
+        ]
+      },
+      "60573f28-a7cd-4ac9-8458-6635abc9fda7": {
+        "id": "60573f28-a7cd-4ac9-8458-6635abc9fda7",
+        "parent": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+        "name": "__init__.py",
+        "type": "PYTHON_FILE",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "WordSimilarity/__init__.py",
+        "code": ""
+      }
+    },
+    "deletedFiles": [
+      "WordSimilarity/lambda.js"
+    ],
+    "rootNode": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+    "openFiles": [
+      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b"
+    ],
+    "currentFileId": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+    "resources": {
+      "apigusWest2WordSimilaritieswordSimilaritiesget": {
+        "name": "apigusWest2WordSimilaritieswordSimilaritiesget",
+        "type": "API_GATEWAY",
+        "config": {
+          "selectedRegion": "us-west-2",
+          "apiMode": 0,
+          "apiName": "Word Similarities",
+          "endpointType": "EDGE",
+          "resourceMode": 0,
+          "resourceName": "word-similarities",
+          "resourcePath": "/word-similarities",
+          "restMethod": "GET",
+          "proxyIntegration": false,
+          "enableCORS": false,
+          "stageMode": 0,
+          "stageName": "dev",
+          "mode": 0
+        }
+      }
+    },
+    "customTemplate": {
+      "dialect": null,
+      "definitions": {}
+    },
+    "envVariables": [
+      {
+        "lambdaId": "all",
+        "varKey": "SIGMA_AWS_ACC_ID",
+        "varValue": null,
+        "shouldPersist": false,
+        "displayOnly": false,
+        "editable": false
+      },
+      {
+        "lambdaId": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+        "varKey": "PYTHONPATH",
+        "varValue": "/var/runtime:/var/task/WordSimilarity",
+        "shouldPersist": true,
+        "displayOnly": false,
+        "editable": true
+      }
+    ],
+    "packageJSON": {
+      "dependencies": {}
+    }
+  },
+  "PROJECT_META": {
+    "projectName": "WordSimilarity",
+    "projectDescription": "",
+    "projectVersion": "1.0.0",
+    "projectRegion": "us-west-2",
+    "platform": "AWS",
+    "platformRegions": {},
+    "lastSave": 1566424460862
+  },
+  "VCS_STATE": {
+    "provider": "GitHub",
+    "repo": {
+      "name": "WordSimilarity",
+      "url": "https://github.com/ryascl/WordSimilarityService"
+    }
+  }
+}
