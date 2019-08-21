@@ -9,7 +9,8 @@
         "isDirectory": true,
         "children": [
           "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
-          "60573f28-a7cd-4ac9-8458-6635abc9fda7"
+          "60573f28-a7cd-4ac9-8458-6635abc9fda7",
+          "b51d779d-b95e-4d0a-a3b6-e3345a72da88"
         ],
         "isRemovable": false,
         "filePath": "WordSimilarity"
@@ -23,7 +24,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "WordSimilarity/main.py",
-        "code": "def handler(event, context):\n    \n    print(event)\n    print(context)\n    \n    return {\"message\": \"Successfully executed\"}\n",
+        "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\nnltk.data.path.append(\"/tmp\")\nnltk.download(\"wordnet\", download_dir = \"/tmp\")\n\ndef handler(event, context):\n    \n    print(event)\n    print(context)\n\n    return {\"message\": wn.synsets('cat', 'n')[0].name()}\n",
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
@@ -48,14 +49,26 @@
         "isRemovable": true,
         "filePath": "WordSimilarity/__init__.py",
         "code": ""
+      },
+      "b51d779d-b95e-4d0a-a3b6-e3345a72da88": {
+        "id": "b51d779d-b95e-4d0a-a3b6-e3345a72da88",
+        "parent": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+        "name": "requirements.txt",
+        "type": "TEXT_FILE",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "WordSimilarity/requirements.txt",
+        "code": "nltk==3.4.4\n"
       }
     },
     "deletedFiles": [
-      "WordSimilarity/lambda.js"
+      "WordSimilarity/nltk_data"
     ],
     "rootNode": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
     "openFiles": [
-      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b"
+      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+      "b51d779d-b95e-4d0a-a3b6-e3345a72da88"
     ],
     "currentFileId": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
     "resources": {
@@ -112,7 +125,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566424460862
+    "lastSave": 1566425546889
   },
   "VCS_STATE": {
     "provider": "GitHub",
