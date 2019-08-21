@@ -23,7 +23,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "WordSimilarity/main.py",
-        "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\nnltk.data.path.append(\"/tmp\")\nnltk.download(\"wordnet\", download_dir = \"/tmp\")\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef parseWordsFromQuery(queryString):\n    if not \"words\" in queryString:\n        return None\n    return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    words = parseWordsFromQuery(event[\"queryStringParameters\"])\n    if(words is None or len(words) < 2 or len(words) > 40):\n        return {\n            \"statusCode\": 400,\n            \"status\": \"invalid request\",\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\n    synsets = [{ \"word\": w, \"lemma\": wn.synsets(w, 'n')[0] } for w in words]\n    pairs = pairings(synsets)\n    similarities = [[p[0][\"word\"], p[1][\"word\"], p[0][\"lemma\"].wup_similarity(p[1][\"lemma\"])] for p in pairs]\n\n    return {\n        \"body\": json.dumps(list(similarities))\n    }\n",
+        "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\n# nltk.data.path.append(\"/tmp\")\n# nltk.download(\"wordnet\", download_dir = \"/tmp\")\n\n# def pairings(source):\n#   result = []\n#   for p1 in range(len(source)):\n#           for p2 in range(p1+1, len(source)):\n#                   result.append([source[p1],source[p2]])\n#   return result\n\n# def parseWordsFromQuery(queryString):\n#     if not \"words\" in queryString:\n#         return None\n#     return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    return event",
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
@@ -131,7 +131,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566431247664
+    "lastSave": 1566431523457
   },
   "VCS_STATE": {
     "provider": "GitHub",
