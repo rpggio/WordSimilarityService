@@ -27,7 +27,7 @@
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
-          "timeout": 60,
+          "timeout": 254,
           "memory": 128,
           "layers": []
         },
@@ -117,7 +117,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566427390496
+    "lastSave": 1566427773091
   },
   "VCS_STATE": {
     "provider": "GitHub",
