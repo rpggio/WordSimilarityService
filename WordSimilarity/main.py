@@ -12,10 +12,14 @@ def pairings(source):
                   result.append([source[p1],source[p2]])
   return result
 
+def parseWordsFromQuery(queryString):
+    if not "words" in queryString:
+        return None
+    return [w.strip() for w in queryString["words"].split(',')]
+
 def handler(event, context):
-    queryString = event["queryStringParameters"]
-    words = queryString["words"]
-    if(words.len() < 2 or words.len() > 40):
+    words = parseWordsFromQuery(event["queryStringParameters"])
+    if(words is None or len(words) < 2 or len(words) > 40):
         return {
             "statusCode": 400,
             "status": "invalid request",
