@@ -50,9 +50,7 @@
         "code": ""
       }
     },
-    "deletedFiles": [
-      "WordSimilarity/requirements.txt"
-    ],
+    "deletedFiles": [],
     "rootNode": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
     "openFiles": [
       "af4c8b7f-fb11-4d22-a0dc-c803259ae14b"
@@ -102,7 +100,14 @@
       }
     ],
     "packageJSON": {
-      "dependencies": {}
+      "dependencies": {
+        "nltk": {
+          "name": "nltk",
+          "version": "3.4.4",
+          "dev": false,
+          "language": "python"
+        }
+      }
     }
   },
   "PROJECT_META": {
@@ -112,7 +117,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566427296671
+    "lastSave": 1566427365307
   },
   "VCS_STATE": {
     "provider": "GitHub",
