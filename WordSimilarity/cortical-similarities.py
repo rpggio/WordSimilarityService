@@ -22,7 +22,7 @@ def handler(event, context):
         return {
             "statusCode": 400,
             "body": json.dumps({
-                "message": "query parameter 'words' must have between 2 and 40 values"
+                "message": "query parameter 'words' must have between 2 and 30 values"
             })
         }
 
