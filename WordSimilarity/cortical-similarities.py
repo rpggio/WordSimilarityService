@@ -38,7 +38,6 @@ def handler(event, context):
         data = json.dumps(body),
         headers = {
             "content-type": "application/json"
-            # "api-key": "c992aea0-c472-11e9-8f72-af685da1b20e"
         }
         )
 
