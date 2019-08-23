@@ -9,7 +9,8 @@
         "isDirectory": true,
         "children": [
           "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
-          "60573f28-a7cd-4ac9-8458-6635abc9fda7"
+          "60573f28-a7cd-4ac9-8458-6635abc9fda7",
+          "d42924da-d9c9-4f3e-9b72-2320010adbfd"
         ],
         "isRemovable": false,
         "filePath": "WordSimilarity"
@@ -17,23 +18,23 @@
       "af4c8b7f-fb11-4d22-a0dc-c803259ae14b": {
         "id": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
         "parent": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
-        "name": "main.py",
+        "name": "nltk-similarities.py",
         "type": "PYTHON_LAMBDA",
         "isDirectory": false,
         "children": [],
         "isRemovable": true,
-        "filePath": "WordSimilarity/main.py",
+        "filePath": "WordSimilarity/nltk-similarities.py",
         "code": "import nltk\nimport json\nfrom nltk.corpus import wordnet as wn\n\nnltk.data.path.append(\"/tmp\")\nnltk.download(\"wordnet\", download_dir = \"/tmp\")\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef parseWordsFromRequest(event):\n    if not \"queryStringParameters\" in event:\n        return []\n    queryString = event[\"queryStringParameters\"]\n    if queryString is None or not \"words\" in queryString:\n        return []\n    return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    words = parseWordsFromRequest(event)\n    if(len(words) < 2 or len(words) > 40):\n        return {\n            \"statusCode\": 400,\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\n    synsets = [{ \"word\": w, \"lemma\": wn.synsets(w, 'n')[0] } for w in words]\n    pairs = pairings(synsets)\n    similarities = [[p[0][\"word\"], p[1][\"word\"], p[0][\"lemma\"].wup_similarity(p[1][\"lemma\"])] for p in pairs]\n\n    return {\n        \"body\": json.dumps(list(similarities))\n    }\n",
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
-          "timeout": 254,
+          "timeout": 60,
           "memory": 128,
           "layers": []
         },
         "triggers": [
           {
-            "resourceName": "apigusWest2WordSimilaritieswordSimilaritiesget",
+            "resourceName": "apigusWest2NLTKSimilaritiesnltkSimilaritiesget",
             "config": {}
           }
         ],
@@ -62,14 +63,42 @@
         "isRemovable": true,
         "filePath": "WordSimilarity/__init__.py",
         "code": ""
+      },
+      "d42924da-d9c9-4f3e-9b72-2320010adbfd": {
+        "id": "d42924da-d9c9-4f3e-9b72-2320010adbfd",
+        "parent": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
+        "name": "cortical-similarities.py",
+        "type": "PYTHON_LAMBDA",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "WordSimilarity/cortical-similarities.py",
+        "code": "import requests\nimport json\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef parseWordsFromRequest(event):\n    if not \"queryStringParameters\" in event:\n        return []\n    queryString = event[\"queryStringParameters\"]\n    if queryString is None or not \"words\" in queryString:\n        return []\n    return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    words = parseWordsFromRequest(event)\n    if(len(words) < 2 or len(words) > 30):\n        return {\n            \"statusCode\": 400,\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\nresponse = requests.request(\n    method = \"POST\",\n    url = \"http://api.cortical.io/rest/compare/bulk\",\n    params = {\n      \"retina_name\": \"en_associative\"\n    },\n    data = json.dumps(data),\n    headers = {\n      \"content-type\": \"application/json\"\n      # \"api-key\": \"c992aea0-c472-11e9-8f72-af685da1b20e\"\n    }\n    )\n\nresponseRows = json.loads(response.text)\njaccards = [r[\"jaccardDistance\"] for r in responseRows]\ndistances = list(zip(pairs, jaccards))\ndistances.sort(key=lambda dist: dist[1])\n\n    return {\n        \"body\": json.dumps(distances)\n    }\n",
+        "config": {
+          "runtime": "python3.6",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": []
+        },
+        "triggers": [
+          {
+            "resourceName": "apigusWest2CorticalSimilaritiescorticalSimilaritiesget",
+            "config": {}
+          }
+        ]
       }
     },
-    "deletedFiles": [],
+    "deletedFiles": [
+      "WordSimilarity/main.py",
+      "WordSimilarity/nltk-compare.py"
+    ],
     "rootNode": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
     "openFiles": [
-      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b"
+      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+      "d42924da-d9c9-4f3e-9b72-2320010adbfd"
     ],
-    "currentFileId": "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
+    "currentFileId": "d42924da-d9c9-4f3e-9b72-2320010adbfd",
     "resources": {
       "apigusWest2WordSimilaritieswordSimilaritiesget": {
         "name": "apigusWest2WordSimilaritieswordSimilaritiesget",
@@ -82,6 +111,44 @@
           "resourceMode": 0,
           "resourceName": "word-similarities",
           "resourcePath": "/word-similarities",
+          "restMethod": "GET",
+          "proxyIntegration": true,
+          "enableCORS": false,
+          "stageMode": 0,
+          "stageName": "dev",
+          "mode": 0
+        }
+      },
+      "apigusWest2NLTKSimilaritiesnltkSimilaritiesget": {
+        "name": "apigusWest2NLTKSimilaritiesnltkSimilaritiesget",
+        "type": "API_GATEWAY",
+        "config": {
+          "selectedRegion": "us-west-2",
+          "apiMode": 0,
+          "apiName": "NLTK Similarities",
+          "endpointType": "EDGE",
+          "resourceMode": 0,
+          "resourceName": "nltk-similarities",
+          "resourcePath": "/nltk-similarities",
+          "restMethod": "GET",
+          "proxyIntegration": true,
+          "enableCORS": false,
+          "stageMode": 0,
+          "stageName": "dev",
+          "mode": 0
+        }
+      },
+      "apigusWest2CorticalSimilaritiescorticalSimilaritiesget": {
+        "name": "apigusWest2CorticalSimilaritiescorticalSimilaritiesget",
+        "type": "API_GATEWAY",
+        "config": {
+          "selectedRegion": "us-west-2",
+          "apiMode": 0,
+          "apiName": "Cortical Similarities",
+          "endpointType": "EDGE",
+          "resourceMode": 0,
+          "resourceName": "cortical-similarities",
+          "resourcePath": "/cortical-similarities",
           "restMethod": "GET",
           "proxyIntegration": true,
           "enableCORS": false,
@@ -111,6 +178,14 @@
         "shouldPersist": true,
         "displayOnly": false,
         "editable": true
+      },
+      {
+        "lambdaId": "d42924da-d9c9-4f3e-9b72-2320010adbfd",
+        "varKey": "PYTHONPATH",
+        "varValue": "/var/runtime:/var/task/WordSimilarity",
+        "shouldPersist": true,
+        "displayOnly": false,
+        "editable": true
       }
     ],
     "packageJSON": {
@@ -131,7 +206,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566432345821
+    "lastSave": 1566522166357
   },
   "VCS_STATE": {
     "provider": "GitHub",
