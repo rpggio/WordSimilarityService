@@ -26,24 +26,25 @@ def handler(event, context):
             })
         }
 
-response = requests.request(
-    method = "POST",
-    url = "http://api.cortical.io/rest/compare/bulk",
-    params = {
-      "retina_name": "en_associative"
-    },
-    data = json.dumps(data),
-    headers = {
-      "content-type": "application/json"
-      # "api-key": "c992aea0-c472-11e9-8f72-af685da1b20e"
-    }
-    )
+    pairs = pairings(words)
+    body = [ [{ "term": p[0] },{ "term": p[1] }] for p in pairs]
+    print(data)
+    response = requests.request(
+        method = "POST",
+        url = "http://api.cortical.io/rest/compare/bulk",
+        params = {
+            "retina_name": "en_associative"
+        },
+        data = json.dumps(body),
+        headers = {
+            "content-type": "application/json"
+            # "api-key": "c992aea0-c472-11e9-8f72-af685da1b20e"
+        }
+        )
 
-responseRows = json.loads(response.text)
-jaccards = [r["jaccardDistance"] for r in responseRows]
-distances = list(zip(pairs, jaccards))
-distances.sort(key=lambda dist: dist[1])
+    responseRows = json.loads(response.text)
+    jaccards = [r["jaccardDistance"] for r in responseRows]
+    distances = list(zip(pairs, jaccards))
+    distances.sort(key=lambda dist: dist[1])
 
-    return {
-        "body": json.dumps(distances)
-    }
+    return { "body": json.dumps(distances) }

@@ -73,7 +73,7 @@
         "children": [],
         "isRemovable": true,
         "filePath": "WordSimilarity/cortical-similarities.py",
-        "code": "import requests\nimport json\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef parseWordsFromRequest(event):\n    if not \"queryStringParameters\" in event:\n        return []\n    queryString = event[\"queryStringParameters\"]\n    if queryString is None or not \"words\" in queryString:\n        return []\n    return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    words = parseWordsFromRequest(event)\n    if(len(words) < 2 or len(words) > 30):\n        return {\n            \"statusCode\": 400,\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\nresponse = requests.request(\n    method = \"POST\",\n    url = \"http://api.cortical.io/rest/compare/bulk\",\n    params = {\n      \"retina_name\": \"en_associative\"\n    },\n    data = json.dumps(data),\n    headers = {\n      \"content-type\": \"application/json\"\n      # \"api-key\": \"c992aea0-c472-11e9-8f72-af685da1b20e\"\n    }\n    )\n\nresponseRows = json.loads(response.text)\njaccards = [r[\"jaccardDistance\"] for r in responseRows]\ndistances = list(zip(pairs, jaccards))\ndistances.sort(key=lambda dist: dist[1])\n\n    return {\n        \"body\": json.dumps(distances)\n    }\n",
+        "code": "import requests\nimport json\n\ndef pairings(source):\n  result = []\n  for p1 in range(len(source)):\n          for p2 in range(p1+1, len(source)):\n                  result.append([source[p1],source[p2]])\n  return result\n\ndef parseWordsFromRequest(event):\n    if not \"queryStringParameters\" in event:\n        return []\n    queryString = event[\"queryStringParameters\"]\n    if queryString is None or not \"words\" in queryString:\n        return []\n    return [w.strip() for w in queryString[\"words\"].split(',')]\n\ndef handler(event, context):\n    words = parseWordsFromRequest(event)\n    if(len(words) < 2 or len(words) > 30):\n        return {\n            \"statusCode\": 400,\n            \"body\": json.dumps({\n                \"message\": \"query parameter 'words' must have between 2 and 40 values\"\n            })\n        }\n\n    pairs = pairings(words)\n    body = [ [{ \"term\": p[0] },{ \"term\": p[1] }] for p in pairs]\n    print(data)\n    response = requests.request(\n        method = \"POST\",\n        url = \"http://api.cortical.io/rest/compare/bulk\",\n        params = {\n            \"retina_name\": \"en_associative\"\n        },\n        data = json.dumps(body),\n        headers = {\n            \"content-type\": \"application/json\"\n            # \"api-key\": \"c992aea0-c472-11e9-8f72-af685da1b20e\"\n        }\n        )\n\n    responseRows = json.loads(response.text)\n    jaccards = [r[\"jaccardDistance\"] for r in responseRows]\n    distances = list(zip(pairs, jaccards))\n    distances.sort(key=lambda dist: dist[1])\n\n    return { \"body\": json.dumps(distances) }\n",
         "config": {
           "runtime": "python3.6",
           "handler": "handler",
@@ -86,16 +86,20 @@
             "resourceName": "apigusWest2CorticalSimilaritiescorticalSimilaritiesget",
             "config": {}
           }
-        ]
+        ],
+        "testCases": {
+          "becff0f8-8297-4d32-8b59-14e19bb70c1d": {
+            "id": "becff0f8-8297-4d32-8b59-14e19bb70c1d",
+            "name": "Valid",
+            "functionId": "d42924da-d9c9-4f3e-9b72-2320010adbfd",
+            "event": "{\n    \"queryStringParameters\": {\n        \"words\": \"cat,dog,car,boat,motor\"\n    }\n} "
+          }
+        }
       }
     },
-    "deletedFiles": [
-      "WordSimilarity/main.py",
-      "WordSimilarity/nltk-compare.py"
-    ],
+    "deletedFiles": [],
     "rootNode": "e2f4cab2-ae38-49cf-9c45-df8e19de3dad",
     "openFiles": [
-      "af4c8b7f-fb11-4d22-a0dc-c803259ae14b",
       "d42924da-d9c9-4f3e-9b72-2320010adbfd"
     ],
     "currentFileId": "d42924da-d9c9-4f3e-9b72-2320010adbfd",
@@ -195,6 +199,12 @@
           "version": "3.4.4",
           "dev": false,
           "language": "python"
+        },
+        "requests": {
+          "name": "requests",
+          "version": "2.22.0",
+          "dev": false,
+          "language": "python"
         }
       }
     }
@@ -206,7 +216,7 @@
     "projectRegion": "us-west-2",
     "platform": "AWS",
     "platformRegions": {},
-    "lastSave": 1566522166357
+    "lastSave": 1566526362075
   },
   "VCS_STATE": {
     "provider": "GitHub",
