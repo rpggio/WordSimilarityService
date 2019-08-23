@@ -28,7 +28,7 @@ def handler(event, context):
 
     pairs = pairings(words)
     body = [ [{ "term": p[0] },{ "term": p[1] }] for p in pairs]
-    print(data)
+    
     response = requests.request(
         method = "POST",
         url = "http://api.cortical.io/rest/compare/bulk",
